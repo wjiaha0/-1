@@ -163,6 +163,15 @@ function startLearning() {
 
 function startReading() {
     // ... （保持不变，此处已省略） ...
+    const data = charList[currentIndex];
+    
+    speak(`请跟我读：${data.char}`);
+
+    setTimeout(() => {
+        const praises = ["读得真好！", "太棒了！", "非常标准！", "继续加油！"];
+        const randomPraise = praises[Math.floor(Math.random() * praises.length)];
+        speak(randomPraise);
+    }, 2500);
 }
 
 function nextChar() {
@@ -184,4 +193,15 @@ function nextChar() {
 
 function speak(text) {
     // ... （保持不变，此处已省略） ...
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        window.speechSynthesis.speak(utterance);
+    } else {
+        alert("您的浏览器不支持语音朗读功能");
+    }
 }
