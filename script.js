@@ -1,5 +1,4 @@
 const charList = [
-    // ... （你的字库数据完全保持不变，此处已省略） ...
     { char: '天', pinyin: 'tiān', phrase: '天空、今天' },
     { char: '地', pinyin: 'dì', phrase: '土地、地方' },
     { char: '人', pinyin: 'rén', phrase: '人民、家人' },
@@ -79,78 +78,67 @@ let currentIndex = 0;
 let writer = null;
 let isAnimating = false;
 
-// +++ 新增：更新进度显示的函数 +++
 function updateProgressDisplay() {
     const totalChars = charList.length;
-    const currentNum = currentIndex + 1; // 索引从0开始，显示从1开始
+    const currentNum = currentIndex + 1;
     document.getElementById('progress-display').innerText = `第 ${currentNum} 字 / 共 ${totalChars} 字`;
 }
 
 window.onload = () => {
-    // 1. 检测语音支持（原有代码）
     if (!('speechSynthesis' in window)) {
-        document.getElementById('phrase-display').innerText = 
-            '提示：请使用Chrome浏览器获得最佳语音体验';
+        document.getElementById('phrase-display').innerText = '提示：请使用Chrome浏览器获得最佳语音体验';
     }
-    
-    // 2. 尝试从本地存储读取学习进度（原有代码）
     const savedProgress = localStorage.getItem('literacyCurrentIndex');
     if (savedProgress !== null) {
         currentIndex = parseInt(savedProgress);
     }
-    // 3. 渲染当前汉字（原有代码）
     renderCurrentChar();
-    // +++ 新增：初始化进度显示 +++
     updateProgressDisplay();
 };
 
 function renderCurrentChar() {
     const data = charList[currentIndex];
-    
     document.getElementById('pinyin-display').innerText = data.pinyin;
     document.getElementById('static-char').innerText = data.char;
     document.getElementById('static-char').style.display = 'block';
     document.getElementById('phrase-display').innerText = '';
-    
     const strokeDiv = document.getElementById('stroke-animation');
-    strokeDiv.innerHTML = ''; 
+    strokeDiv.innerHTML = '';
     strokeDiv.style.display = 'none';
-    
     window.speechSynthesis.cancel();
-    // +++ 新增：每次渲染新字后都更新进度显示 +++
     updateProgressDisplay();
 }
 
 function startLearning() {
-    // *** 修改：如果正在动画，先取消它，以实现中断功能 ***
+    // 强制中断逻辑
     if (writer && isAnimating) {
         writer.cancelAnimation();
+        document.getElementById('static-char').style.display = 'block';
+        const strokeDiv = document.getElementById('stroke-animation');
+        strokeDiv.style.display = 'none';
+        strokeDiv.innerHTML = '';
         isAnimating = false;
+        writer = null;
     }
-    // 原 `if (isAnimating) return;` 已被上面逻辑替代
-    
-    const data = charList[currentIndex];
-    const staticChar = document.getElementById('static-char');
-    const strokeDiv = document.getElementById('stroke-animation');
-    const phraseDisplay = document.getElementById('phrase-display');
 
+    const data = charList[currentIndex];
+    const phraseDisplay = document.getElementById('phrase-display');
     phraseDisplay.innerText = "词组：" + data.phrase;
     speak(`${data.char}。 ${data.phrase}。`);
 
-    staticChar.style.display = 'none';
+    document.getElementById('static-char').style.display = 'none';
+    const strokeDiv = document.getElementById('stroke-animation');
     strokeDiv.style.display = 'block';
     strokeDiv.innerHTML = '';
 
     const containerSize = document.getElementById('character-container').clientWidth;
-
     writer = HanziWriter.create('stroke-animation', data.char, {
         width: containerSize,
         height: containerSize,
         padding: 5,
         strokeColor: '#000000',
         showOutline: true,
-        // +++ 新增：加快笔顺播放速度参数 +++
-        strokeAnimationSpeed: 2.5 // 值越大越快，1是默认速度，建议范围1.5-2.5
+        strokeAnimationSpeed: 1.8
     });
 
     isAnimating = true;
@@ -162,11 +150,8 @@ function startLearning() {
 }
 
 function startReading() {
-    // ... （保持不变，此处已省略） ...
     const data = charList[currentIndex];
-    
     speak(`请跟我读：${data.char}`);
-
     setTimeout(() => {
         const praises = ["读得真好！", "太棒了！", "非常标准！", "继续加油！"];
         const randomPraise = praises[Math.floor(Math.random() * praises.length)];
@@ -175,29 +160,26 @@ function startReading() {
 }
 
 function nextChar() {
-    // 1. 中断当前可能正在进行的动画
+    // 强制中断逻辑
     if (writer && isAnimating) {
         writer.cancelAnimation();
+        document.getElementById('static-char').style.display = 'block';
+        const strokeDiv = document.getElementById('stroke-animation');
+        strokeDiv.style.display = 'none';
+        strokeDiv.innerHTML = '';
         isAnimating = false;
+        writer = null;
     }
-    
-    // 2. 切换到下一个字的索引
+
     currentIndex++;
-    
-    // 3. 检查是否已学完一圈，如果是，则循环回到第一个字
     if (currentIndex >= charList.length) {
         currentIndex = 0;
     }
-    
-    // 4. 保存新进度到本地存储
     localStorage.setItem('literacyCurrentIndex', currentIndex);
-    
-    // 5. 渲染新汉字（这会自动更新汉字、拼音、词组和进度显示）
     renderCurrentChar();
 }
 
 function speak(text) {
-    // ... （保持不变，此处已省略） ...
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
