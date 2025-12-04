@@ -138,7 +138,7 @@ function startLearning() {
         padding: 5,
         strokeColor: '#000000',
         showOutline: true,
-        strokeAnimationSpeed: 1.8
+        strokeAnimationSpeed: 3
     });
 
     isAnimating = true;
