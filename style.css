@@ -36,6 +36,24 @@ header {
     font-weight: 500;
 }
 
+/* +++ 新增：学习进度显示样式 +++ */
+.progress-info {
+    text-align: center;
+    margin: 5px 0 25px 0; /* 上下留出适当空间 */
+    padding: 10px 20px;
+    background-color: #f8f9fa; /* 非常浅的背景，与内容区稍作区分 */
+    border-radius: 20px; /* 圆角矩形 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 细微的阴影，增加层次感 */
+}
+
+#progress-display {
+    font-size: 20px;
+    font-weight: 600; /* 加粗，使其清晰 */
+    color: #555; /* 深灰色，清晰但不刺眼 */
+    letter-spacing: 1px;
+}
+/* +++ 进度显示样式结束 +++ */
+
 #character-container {
     width: 260px;
     height: 260px;
