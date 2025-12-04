@@ -16,6 +16,20 @@ let writer = null;
 let isAnimating = false;
 
 window.onload = () => {
+    // 1. 检测语音支持（原有代码）
+    if (!('speechSynthesis' in window)) {
+        document.getElementById('phrase-display').innerText = 
+            '提示：请使用Chrome浏览器获得最佳语音体验';
+    }
+    
+    // 2. +++ 新增：尝试从本地存储读取学习进度 +++
+    const savedProgress = localStorage.getItem('literacyCurrentIndex');
+    if (savedProgress !== null) {
+        currentIndex = parseInt(savedProgress); // 转换为数字
+        // 可选：增加一个提示，告诉用户已恢复进度
+        // setTimeout(() => { alert(`已为您恢复学习进度，继续学习第 ${currentIndex + 1} 个字。`); }, 500);
+    }
+    // 3. 渲染当前汉字（原有代码）
     renderCurrentChar();
 };
 
@@ -84,6 +98,9 @@ function nextChar() {
     if (currentIndex >= charList.length) {
         currentIndex = 0;
     }
+    // +++ 新增：将最新的进度保存到本地存储 +++
+    localStorage.setItem('literacyCurrentIndex', currentIndex);
+    // 渲染新汉字（原有代码）
     renderCurrentChar();
 }
 
