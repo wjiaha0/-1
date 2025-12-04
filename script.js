@@ -150,7 +150,7 @@ function startLearning() {
         strokeColor: '#000000',
         showOutline: true,
         // +++ 新增：加快笔顺播放速度参数 +++
-        strokeAnimationSpeed: 1.8 // 值越大越快，1是默认速度，建议范围1.5-2.5
+        strokeAnimationSpeed: 2.5 // 值越大越快，1是默认速度，建议范围1.5-2.5
     });
 
     isAnimating = true;
