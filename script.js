@@ -94,7 +94,6 @@ window.onload = () => {
     }
     // 3. 渲染当前汉字（原有代码）
     renderCurrentChar();
-    updateProgressDisplay(); // +++ 新增：页面加载后立即更新一次 +++
 };
 
 function renderCurrentChar() {
@@ -110,25 +109,10 @@ function renderCurrentChar() {
     strokeDiv.style.display = 'none';
     
     window.speechSynthesis.cancel();
-    
-    // +++ 新增：更新进度显示 +++
-    updateProgressDisplay();
-}
 }
 
 function startLearning() {
-    // if (isAnimating) return;
-
-    / 如果正在动画，先取消它
-    if (writer && isAnimating) {
-        writer.cancelAnimation(); // 中断动画
-        isAnimating = false; // 重置状态
-        // 可选：立即显示静态字
-        document.getElementById('static-char').style.display = 'block';
-        document.getElementById('stroke-animation').style.display = 'none';
-    }
-    // ... 函数剩下的代码不变 ...
-    // 注意：需要把原来开头的 `if (isAnimating) return;` 这一行删除或注释掉
+    if (isAnimating) return;
     
     const data = charList[currentIndex];
     const staticChar = document.getElementById('static-char');
@@ -149,8 +133,7 @@ function startLearning() {
         height: containerSize,
         padding: 5,
         strokeColor: '#000000',
-        showOutline: true,
-        strokeAnimationSpeed: 2 // 默认是1，数字越大越快。建议设为1.5到2.5之间。
+        showOutline: true
     });
 
     isAnimating = true;
@@ -174,20 +157,13 @@ function startReading() {
 }
 
 function nextChar() {
-    // 切换前，中断当前可能正在进行的动画
-    if (writer && isAnimating) {
-        writer.cancelAnimation();
-        isAnimating = false;
-    }
-    // 索引加1，切换到下一个字
     currentIndex++;
-    // 边界检查：如果超过数组长度，循环回到第一个
     if (currentIndex >= charList.length) {
         currentIndex = 0;
     }
-    // 将最新的进度保存到本地存储
+    // +++ 新增：将最新的进度保存到本地存储 +++
     localStorage.setItem('literacyCurrentIndex', currentIndex);
-    // 渲染新汉字
+    // 渲染新汉字（原有代码）
     renderCurrentChar();
 }
 
@@ -203,15 +179,4 @@ function speak(text) {
     } else {
         alert("您的浏览器不支持语音朗读功能");
     }
-    // ===== 新增：更新进度显示的函数 =====
-// ===== 新增：更新进度显示的函数 =====
-function updateProgressDisplay() {
-    // 1. 计算：当前是第几个字（currentIndex从0开始，所以+1）
-    const currentNumber = currentIndex + 1;
-    // 2. 计算：总共有多少字（直接取数组的长度）
-    const totalNumber = charList.length;
-    // 3. 更新：把计算好的数字填到网页的指定位置
-    document.getElementById('progress-display').innerText = 
-        `第 ${currentNumber} 字 / 共 ${totalNumber} 字`;
-}
 }
