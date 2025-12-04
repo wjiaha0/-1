@@ -148,7 +148,7 @@ function startLearning() {
         height: containerSize,
         padding: 5,
         strokeColor: '#000000',
-        showOutline: true
+        showOutline: true,
         strokeAnimationSpeed: 2 // 默认是1，数字越大越快。建议设为1.5到2.5之间。
     });
 
