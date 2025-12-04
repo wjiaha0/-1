@@ -92,11 +92,3 @@ button:active { opacity: 0.8; transform: scale(0.98); }
     #character-container { width: 200px; height: 200px; }
     #pinyin-display { font-size: 36px; }
 }
-/* 进度信息栏样式 */
-.progress-info {
-    text-align: center; /* 文字居中 */
-    margin: 15px 0;     /* 上下留点边距 */
-    font-size: 18px;    /* 字号 */
-    color: #666;        /* 灰色，不那么抢眼 */
-    font-weight: bold;  /* 加粗一点 */
-}
