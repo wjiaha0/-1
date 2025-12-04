@@ -175,20 +175,25 @@ function startReading() {
 }
 
 function nextChar() {
-    // +++ 新增：切换前，中断当前可能正在进行的动画 +++
+    // 1. 中断当前可能正在进行的动画
     if (writer && isAnimating) {
         writer.cancelAnimation();
         isAnimating = false;
     }
     
-    // *** 修改：修正原有逻辑，确保索引正确递增并循环 ***
+    // 2. 切换到下一个字的索引
     currentIndex++;
+    
+    // 3. 检查是否已学完一圈，如果是，则循环回到第一个字
     if (currentIndex >= charList.length) {
         currentIndex = 0;
     }
     
+    // 4. 保存新进度到本地存储
     localStorage.setItem('literacyCurrentIndex', currentIndex);
-    renderCurrentChar(); // 此函数内部已包含更新进度显示
+    
+    // 5. 渲染新汉字（这会自动更新汉字、拼音、词组和进度显示）
+    renderCurrentChar();
 }
 
 function speak(text) {
