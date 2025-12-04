@@ -94,6 +94,7 @@ window.onload = () => {
     }
     // 3. 渲染当前汉字（原有代码）
     renderCurrentChar();
+    updateProgressDisplay(); // +++ 新增：页面加载后立即更新一次 +++
 };
 
 function renderCurrentChar() {
@@ -203,11 +204,14 @@ function speak(text) {
         alert("您的浏览器不支持语音朗读功能");
     }
     // ===== 新增：更新进度显示的函数 =====
+// ===== 新增：更新进度显示的函数 =====
 function updateProgressDisplay() {
-    const totalChars = charList.length; // 动态获取总字数
-    const currentNum = currentIndex + 1; // 当前是第几个字（从1开始数）
-    // 更新中间的文字显示
-    document.getElementById('progress-display').innerText =
-        `第 ${currentNum} 字 / 共 ${totalChars} 字`;
+    // 1. 计算：当前是第几个字（currentIndex从0开始，所以+1）
+    const currentNumber = currentIndex + 1;
+    // 2. 计算：总共有多少字（直接取数组的长度）
+    const totalNumber = charList.length;
+    // 3. 更新：把计算好的数字填到网页的指定位置
+    document.getElementById('progress-display').innerText = 
+        `第 ${currentNumber} 字 / 共 ${totalNumber} 字`;
 }
 }
