@@ -109,6 +109,10 @@ function renderCurrentChar() {
     strokeDiv.style.display = 'none';
     
     window.speechSynthesis.cancel();
+    
+    // +++ 新增：更新进度显示 +++
+    updateProgressDisplay();
+}
 }
 
 function startLearning() {
@@ -169,21 +173,20 @@ function startReading() {
 }
 
 function nextChar() {
-    currentIndex++;
-    if (currentIndex >= charList.length) {
-        currentIndex = 0;
-    }
-    // +++ 新增：将最新的进度保存到本地存储 +++
-    localStorage.setItem('literacyCurrentIndex', currentIndex);
-    // 渲染新汉字（原有代码）
     // 切换前，中断当前可能正在进行的动画
     if (writer && isAnimating) {
         writer.cancelAnimation();
         isAnimating = false;
     }
+    // 索引加1，切换到下一个字
     currentIndex++;
-    // ... 边界检查等后续代码不变 ...
+    // 边界检查：如果超过数组长度，循环回到第一个
+    if (currentIndex >= charList.length) {
+        currentIndex = 0;
+    }
+    // 将最新的进度保存到本地存储
     localStorage.setItem('literacyCurrentIndex', currentIndex);
+    // 渲染新汉字
     renderCurrentChar();
 }
 
@@ -199,4 +202,12 @@ function speak(text) {
     } else {
         alert("您的浏览器不支持语音朗读功能");
     }
+    // ===== 新增：更新进度显示的函数 =====
+function updateProgressDisplay() {
+    const totalChars = charList.length; // 动态获取总字数
+    const currentNum = currentIndex + 1; // 当前是第几个字（从1开始数）
+    // 更新中间的文字显示
+    document.getElementById('progress-display').innerText =
+        `第 ${currentNum} 字 / 共 ${totalChars} 字`;
+}
 }
