@@ -112,7 +112,18 @@ function renderCurrentChar() {
 }
 
 function startLearning() {
-    if (isAnimating) return;
+    // if (isAnimating) return;
+
+    / 如果正在动画，先取消它
+    if (writer && isAnimating) {
+        writer.cancelAnimation(); // 中断动画
+        isAnimating = false; // 重置状态
+        // 可选：立即显示静态字
+        document.getElementById('static-char').style.display = 'block';
+        document.getElementById('stroke-animation').style.display = 'none';
+    }
+    // ... 函数剩下的代码不变 ...
+    // 注意：需要把原来开头的 `if (isAnimating) return;` 这一行删除或注释掉
     
     const data = charList[currentIndex];
     const staticChar = document.getElementById('static-char');
@@ -134,6 +145,7 @@ function startLearning() {
         padding: 5,
         strokeColor: '#000000',
         showOutline: true
+        strokeAnimationSpeed: 2 // 默认是1，数字越大越快。建议设为1.5到2.5之间。
     });
 
     isAnimating = true;
@@ -164,6 +176,14 @@ function nextChar() {
     // +++ 新增：将最新的进度保存到本地存储 +++
     localStorage.setItem('literacyCurrentIndex', currentIndex);
     // 渲染新汉字（原有代码）
+    // 切换前，中断当前可能正在进行的动画
+    if (writer && isAnimating) {
+        writer.cancelAnimation();
+        isAnimating = false;
+    }
+    currentIndex++;
+    // ... 边界检查等后续代码不变 ...
+    localStorage.setItem('literacyCurrentIndex', currentIndex);
     renderCurrentChar();
 }
 
