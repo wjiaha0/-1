@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成人识字助手</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="hanzi-writer.min.js"></script>
+</head>
+<body>
+    <header>成人识字助手</header>
+    
+    <div class="display-area">
+        <div id="pinyin-display"></div>
+        
+        <div id="character-container">
+            <div id="static-char"></div>
+            <div id="stroke-animation" style="position:absolute; top:0; left:0; z-index:2; display:none;"></div>
+        </div>
+
+        <div id="phrase-display"></div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-learn" onclick="startLearning()">学习</button>
+        <button class="btn-read" onclick="startReading()">跟读</button>
+        <button class="btn-next" onclick="nextChar()">下一个</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
